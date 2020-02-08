@@ -1,8 +1,9 @@
 import React from 'react';
 import { Text, View, FlatList, ScrollView } from 'react-native';
 import { Card, ListItem } from 'react-native-elements';
-
-import { LEADERS } from '../shared/leaders';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
+import { Loading } from './LoadingComponent';
 
 function RenderHistory() {
   return (
@@ -31,12 +32,23 @@ const renderMenuItem = ({ item, index }) => {
       title={item.name}
       subtitle={item.description}
       hideChevron={true}
-      leftAvatar={{ source: require('./images/alberto.png') }}
+      leftAvatar={{ source: { uri: baseUrl + item.image } }}
     />
   );
 };
 
 function RenderLeaders({ leaders }) {
+  if (leaders.isLoading) {
+    return (
+      <Card title='Corporate Leadership'>
+        <Loading />
+      </Card>
+    );
+  } else if (leaders.errMess) {
+    <Card title='Corporate Leadership'>
+      <Text>{leaders.errMess}</Text>
+    </Card>;
+  }
   return (
     <Card title='Corporate Leadership'>
       <FlatList
@@ -49,12 +61,6 @@ function RenderLeaders({ leaders }) {
 }
 
 class About extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      leaders: LEADERS
-    };
-  }
   static navigationOptions = {
     title: 'About'
   };
@@ -63,10 +69,16 @@ class About extends React.Component {
     return (
       <ScrollView>
         <RenderHistory />
-        <RenderLeaders leaders={this.state.leaders} />
+        <RenderLeaders leaders={this.props.leaders.leaders} />
       </ScrollView>
     );
   }
 }
 
-export default About;
+const mapStateToProps = state => {
+  return {
+    leaders: state.leaders
+  };
+};
+
+export default connect(mapStateToProps, {})(About);
