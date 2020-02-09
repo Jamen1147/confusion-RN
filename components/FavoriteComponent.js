@@ -1,14 +1,57 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  ScrollView,
-  FlatList,
-  Button,
-  Modal,
-  StyleSheet
-} from 'react-native';
-import { Card, Icon, Rating, Input } from 'react-native-elements';
+import { View, FlatList } from 'react-native';
+import { Tile, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
-import { postFavorite, postComment } from '../redux/ActionCreators';
+import { Loading } from './LoadingComponent';
+
+class Favorites extends React.Component {
+  static navigationOptions = {
+    title: 'My Favorites'
+  };
+
+  render() {
+    const { navigate } = this.props.navigation;
+    const renderMenuItem = ({ item, index }) => {
+      return (
+        <ListItem
+          key={index}
+          title={item.name}
+          subtitle={item.description}
+          hideChevron={true}
+          onPress={() => navigate('Dishdetail', { dishId: item.id })}
+          leftAvatar={{ source: { uri: baseUrl + item.image } }}
+        ></ListItem>
+      );
+    };
+
+    if (this.props.dishes.isLoading) {
+      return <Loading />;
+    } else if (this.props.dishes.errMess) {
+      return (
+        <View>
+          <Text>{this.props.dishes.errMess}</Text>
+        </View>
+      );
+    } else {
+      return (
+        <FlatList
+          data={this.props.dishes.dishes.filter(x =>
+            this.props.favorites.some(y => y === x.id)
+          )}
+          renderItem={renderMenuItem}
+          keyExtractor={item => item.id.toString()}
+        />
+      );
+    }
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    dishes: state.dishes,
+    favorites: state.favorites
+  };
+};
+
+export default connect(mapStateToProps, {})(Favorites);
