@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Card } from 'react-native-elements';
+import * as Animatable from 'react-native-animatable';
 
 function RenderContact() {
   return (
@@ -21,7 +22,11 @@ class Contact extends React.Component {
   };
 
   render() {
-    return <RenderContact />;
+    return (
+      <Animatable.View animation='fadeInDown' duration={2000} delay={1000}>
+        <RenderContact />
+      </Animatable.View>
+    );
   }
 }
 

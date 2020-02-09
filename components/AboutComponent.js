@@ -4,6 +4,7 @@ import { Card, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
+import * as Animatable from 'react-native-animatable';
 
 function RenderHistory() {
   return (
@@ -68,8 +69,10 @@ class About extends React.Component {
   render() {
     return (
       <ScrollView>
-        <RenderHistory />
-        <RenderLeaders leaders={this.props.leaders.leaders} />
+        <Animatable.View animation='fadeInDown' duration={2000} delay={1000}>
+          <RenderHistory />
+          <RenderLeaders leaders={this.props.leaders.leaders} />
+        </Animatable.View>
       </ScrollView>
     );
   }
