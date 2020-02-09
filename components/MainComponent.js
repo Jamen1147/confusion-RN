@@ -21,6 +21,7 @@ import Dishdetail from './DishdetailComponent';
 import Home from './HomeComponent';
 import Contact from './ContactComponent';
 import About from './AboutComponent';
+import Reservation from './ReservationComponenet';
 
 import { connect } from 'react-redux';
 import {
@@ -136,6 +137,31 @@ const AboutNavigator = createStackNavigator(
   }
 );
 
+const ReservationNavigator = createStackNavigator(
+  {
+    Reservation: { screen: Reservation }
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: '#512da8'
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        color: '#fff'
+      },
+      headerLeft: (
+        <Icon
+          name='menu'
+          color='white'
+          size={24}
+          onPress={() => navigation.toggleDrawer()}
+        />
+      )
+    })
+  }
+);
+
 const CustomDrawerContentComponent = props => {
   return (
     <ScrollView>
@@ -192,6 +218,21 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         title: 'Contact',
         drawerLabel: 'Contact',
+        drawerIcon: ({ tintColor }) => (
+          <Icon
+            name='address-card'
+            type='font-awesome'
+            size={22}
+            color={tintColor}
+          />
+        )
+      }
+    },
+    Reservation: {
+      screen: ReservationNavigator,
+      navigationOptions: {
+        title: 'Reservation',
+        drawerLabel: 'Reservation',
         drawerIcon: ({ tintColor }) => (
           <Icon
             name='address-card'
